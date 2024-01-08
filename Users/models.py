@@ -1,3 +1,4 @@
+from djongo import models
 from django.db import models
 
 # Create your models here.
@@ -17,7 +18,7 @@ class users(models.Model):
     password = models.CharField(max_length = 100,blank = True)
     passw = models.CharField(max_length = 100,blank = True)
 
-    # class Meta:
-    #     db_table = 'user'  # Set the collection name
-    #     app_label = 'ClassVibes'  # Set the database names
+    class Meta:
+        db_table = 'user'  # Set the collection name
+        app_label = 'Campusvibes'  # Set the database names
         

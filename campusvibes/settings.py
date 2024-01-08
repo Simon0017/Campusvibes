@@ -76,10 +76,15 @@ WSGI_APPLICATION = 'campusvibes.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'Campusvibes',  # Replace with your MongoDB database name
+        'CLIENT': {
+            'host': 'localhost',
+            'port': 27017,  # Default MongoDB port
+        }
     }
 }
+
 
 
 # Password validation
