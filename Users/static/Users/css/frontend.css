@@ -1,0 +1,136 @@
+.navbar2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: #1d7948; */
+    background-color: transparent;
+    color: #ec8091;
+    height: 10vh;
+    list-style: none;
+    padding: 0 20px;
+    width: 90%;
+    margin-left: 5%;
+}
+
+.navbar2 li {
+    margin: 0;
+}
+
+.navbar2 li a {
+    text-decoration: none;
+    font-size: 25px;
+    color: wheat;
+}
+
+/* .navbar2 li a:hover{
+    color: gray;
+} */
+
+.navbar-logo {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.6em;
+    color:#fff;
+    font-weight: 400;
+    font-family: fantasy;
+}
+
+.navbar-logo::first-letter{
+    font-size: xxx-large;
+    font-family: 'Times New Roman', Times, serif;
+}
+.navbar2 li:last-child {
+    display: flex;
+    align-items: center;
+}
+
+.navbar2 li:last-child a {
+    display: flex;
+    align-items: center;
+    color: #ec8091;
+}
+
+.navbar2 li:first-child a{
+    color: #ec8091;
+}
+
+/* Your existing CSS */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
+.dropdown-menu .dropdown-item {
+    width: 100%;
+    text-align: left;
+}
+
+.dropdown-menu li {
+    padding: 10px;
+    text-align: center;
+    
+}
+
+.dropdown-menu li a {
+    text-decoration: none;
+    color: #ec8091;
+    font-size: 20px;
+    display: block;
+}
+
+.dropdown-menu li a:hover {
+    color: blue;
+}
+
+.nested-dropdown-menu {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 1000;
+    list-style-type: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10%;
+    
+}
+
+.nested-dropdown-menu li {
+    padding: 10px;
+    text-align: left;
+}
+
+.nested-dropdown-menu li a {
+    text-decoration: none;
+    color: #ec8091;
+    font-size: 20px;
+    display: block;
+}
+
+.nested-dropdown-menu li a:hover {
+    color: #fff;
+}
+
+
+.body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh; /* Viewport height */
+    width: 100%; /* Viewport width */
+    object-fit: cover; /* Ensure the image covers the entire screen */
+    z-index: -1; /* Place it behind other elements */
+}
+
+.hidden{
+    display: none;
+}

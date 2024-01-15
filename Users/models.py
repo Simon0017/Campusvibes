@@ -14,11 +14,11 @@ class users(models.Model):
     address = models.CharField(max_length = 100,blank = True)
     address = models.CharField(max_length = 100,blank = True)
     institution = models.CharField(max_length = 100,blank = True)
-    picture = models.FileField()
+    picture = models.FileField(blank=True)
     password = models.CharField(max_length = 100,blank = True)
-    passw = models.CharField(max_length = 100,blank = True)
+    # passw = models.CharField(max_length = 100,blank = True)
 
     class Meta:
         db_table = 'user'  # Set the collection name
-        app_label = 'Campusvibes'  # Set the database names
+        app_label = 'Users'  # Set the database names
         

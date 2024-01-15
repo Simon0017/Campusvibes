@@ -1,0 +1,51 @@
+/* body{
+    background-image: url(../../public/images/background.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center ;
+} */
+.navbar{
+    width: 100%;
+    overflow: auto;
+    background-color: transparent;
+    /* background-color: #333333; */
+    /* margin-left: 15%; */
+}
+.navbar ul{
+    list-style-type: none;
+}
+.navbar  li{
+    float: left;
+}
+
+/* .navbar li .user{
+    float: right;
+} */
+
+.navbar li a{
+    display: block;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    padding: 14px 16px;
+    font-size: 17px;
+}
+
+.navbar li:hover{
+    opacity: 0.7;
+}
+
+.navbar .user{
+    float: right;
+
+}
+
+/* responsiveness */
+
+@media screen and (max-width: 600px){
+    .navbar .user{
+        float: none;
+
+    }
+    
+}

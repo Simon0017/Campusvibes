@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">  
+	    <title>Sign Up</title>
+        <meta name="description" content="">
+        <meta name="author" content="templatemo">
+        <!-- 
+        Visual Admin Template
+        https://templatemo.com/tm-455-visual-admin
+        -->
+	    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'>
+    <link href="{% static 'Users/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/css/templatemo-style.css' %}" rel="stylesheet">
+	    
+	    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	    <!--[if lt IE 9]>
+	      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	</head>
+    <body>
+	<div class="templatemo-content col-1 light-gray-bg">
+        <div class="templatemo-content-container">
+          <div class="templatemo-content-widget white-bg">
+            <h2 class="margin-bottom-10">Registration form</h2>
+            <p>Please fill in the registration form.</p>
+            <form action = "{% url 'Users:Registration' %}" class="templatemo-login-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label for="inputFirstName">First Name</label>
+                    <input name = "FirstName" type="text" class="form-control" id="inputFirstName" placeholder="John">                  
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label for="inputLastName">Last Name</label>
+                    <input name ='LastName' type="text" class="form-control" id="inputLastName" placeholder="Smith">                  
+                </div> 
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label for="inputUsername">Username</label>
+                    <input name = 'Username' type="text" class="form-control" id="inputUsername" placeholder="Admin">                  
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label for="inputEmail">Email</label>
+                    <input name = 'email' type="email" class="form-control" id="inputEmail" placeholder="admin@company.com">                  
+                </div> 
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group"> 
+                    <label class="control-label templatemo-block">Gender</label>                 
+                    <div class="templatemo-block margin-bottom-5">
+                      <input type="checkbox" name="gender" id="c1" value="new" checked> 
+                      <label for="c1" class="font-weight-400"><span></span>Male</label> 
+                    </div>
+                    <div class="templatemo-block margin-bottom-5">
+                      <input type="checkbox" name="gender" id="c2" value="weekly">
+                      <label for="c2" class="font-weight-400"><span></span>Female</label> 
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label class="control-label" for="inputWithSuccess">Address</label>
+                    <input name = 'address' type="text" class="form-control" id="inputWithSuccess">               
+                </div>                
+              </div>
+              
+              <div class="row form-group">
+                <div class="col-lg-12 form-group">                  
+                    <label class="control-label" for="inputWithWarning">Institution</label>
+                    <input name = 'institution' type="text" class="form-control" id="inputWithWarning">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label for="inputNewPassword">Password</label>
+                    <input name = 'password' type="password" class="form-control" id="inputNewPassword">
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label for="inputConfirmNewPassword">Confirm Password</label>
+                    <input name ='passw' type="password" class="form-control" id="inputConfirmNewPassword">
+                </div> 
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-12">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Default file input example</label>
+                        <input name = 'picture' class="form-control" type="file" id="formFile">
+                      </div>                 
+                </div>
+              </div>
+              <div class="form-group text-right">
+                <button type="submit" class="templatemo-blue-button">Update</button>
+                <button type="reset" class="templatemo-white-button">Reset</button>
+              </div>                           
+            </form>
+          </div>
+          <footer class="text-right">
+            <p>Copyright &copy; 2084 Company Name 
+            | Design: Template Mo</p>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script type="text/javascript" src="{% static 'js/jquery-1.11.2.min.js' %}"></script>        <!-- jQuery -->
+    <script type="text/javascript" src="{% static 'js/bootstrap-filestyle.min.js' %}"></script>  <!-- http://markusslima.github.io/bootstrap-filestyle/ -->
+    <script type="text/javascript" src="{% static 'js/templatemo-script.js' %}"></script>        <!-- Templatemo Script -->
+  </body>
+	
+</html>

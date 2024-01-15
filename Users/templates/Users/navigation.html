@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% load static %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Users/css/frontend.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Users/css/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Users/css/bootstrap-5.3.2/dist/css/bootstrap.css' %}">
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.2/dist/axios.min.js"></script>
+	<title>{% block title %}Campus Vibes{% endblock title %}</title>>
+
+</head>
+<body>
+    {% block navbar %}
+    <ul class="navbar2">
+        <li class="dropdown">
+            <a href="#login" class="dropdown-toggle">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item"> <a href="#">Profile</a> </li>
+                <li class="dropdown-item settings-parent">
+                    <a href="#" class="settings-dropdown-toggle">Settings</a>
+                    <ul class="nested-dropdown-menu">
+                        <li><a href="#">Account</a> </li>
+                        <li><a href="#">General</a> </li>
+                        <li><a href="#">Security</a> </li>
+                    </ul>
+                </li>
+                <li class="dropdown-item"><a href="#">Logout</a> </li>
+            </ul>
+        </li>
+        <li class="navbar-logo" style="color:white"><a href="#">Campusvibes</a> </li>
+        <li class="dropdown">
+            <a href="#login" class="dropdown-toggle">
+                <i class="fa fa-user fa-fw"></i> User
+            </a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item"><a href="{% url 'Users:login' %}">Log in</a> </li>
+                <li class="dropdown-item"><a href="{% url 'Users:Registration' %}">Registration</a> </li>
+                <li class="dropdown-item"><a href="#">Logout</a> </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+    
+
+    <script>
+        $(document).ready(function() {
+            $('.dropdown-toggle').click(function(e) {
+                e.preventDefault();
+                $(this).next('.dropdown-menu').slideToggle('fast');
+            });
+
+            $('.settings-parent .settings-dropdown-toggle').click(function(e) {
+                e.preventDefault();
+                $(this).siblings('.nested-dropdown-menu').slideToggle('fast');
+            });
+        });
+    </script>
+    {% endblock navbar %}
+
+    {% block content %}
+    Nothing to show here
+    {% endblock content %}
+</body>
+</html>
