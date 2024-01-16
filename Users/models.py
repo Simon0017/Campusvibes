@@ -1,10 +1,7 @@
 from djongo import models
 from django.db import models
 
-# Create your models here.
-
-
-    
+# Create your models here.   
 class users(models.Model):
     fName = models.CharField(max_length = 100,blank = True)
     lName=  models.CharField(max_length = 100,blank = True)

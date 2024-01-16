@@ -53,4 +53,7 @@ def schedules(request):
 def createTable(request):
     return render(request,'Users/tableCreation.html')
 
+def createTable2(request):
+    return render(request,'Users/table_step2.html')
+
 # Create your views here.
