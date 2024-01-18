@@ -19,3 +19,7 @@ class users(models.Model):
         db_table = 'user'  # Set the collection name
         app_label = 'Users'  # Set the database names
         
+class quotes(models.Model):
+    author = models.CharField(max_length=50)
+    avatar = models.BinaryField()
+

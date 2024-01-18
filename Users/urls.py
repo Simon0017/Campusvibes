@@ -10,7 +10,10 @@ urlpatterns = [
      path('',views.index,name='index'),
      path('schedule',views.schedules,name='schedule'),
      path('createTable',views.createTable,name='createTable'),
-     path('step_two',views.createTable2,name='step_two')
+     path('step_two',views.createTable2,name='step_two'),
+     path('chat',views.chatRooms,name='chat'),
+     path('Rooms',views.scheduleRooms,name='Rooms'),
+     path('Ads',views.advertisement,name='Ads'),
     
 
 ]

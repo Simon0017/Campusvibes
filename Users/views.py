@@ -56,4 +56,13 @@ def createTable(request):
 def createTable2(request):
     return render(request,'Users/table_step2.html')
 
+def chatRooms(request):
+    return render(request,'Users/chatRoom.html')
+
+def scheduleRooms(request):
+    return render(request,'Users/scheduleRooms.html')
+
+def advertisement(request):
+    return render(request,'Users/advertisement.html')
+
 # Create your views here.
