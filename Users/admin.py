@@ -4,10 +4,10 @@ from .models import *
 class TodoAdmin(admin.ModelAdmin):
     list_display = ('')
 
-admin.site.register(users)
-admin.site.register(quotes)
-admin.site.register(messages)
-admin.site.register(chat)
+# admin.site.register(Users)
+# admin.site.register(Quotes)
+# admin.site.register(Messages)
+# admin.site.register(Chat)
 # admin.site.register(trials)
 
 # Register your models here.

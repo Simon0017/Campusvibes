@@ -74,16 +74,16 @@ WSGI_APPLICATION = 'campusvibes.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'Campusvibes',  # Replace with your MongoDB database name
-        'CLIENT': {
-            'host': 'localhost',
-            'port': 27017,  # Default MongoDB port
-        }
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'Campusvibes',  # Replace with your MongoDB database name
+#         'CLIENT': {
+#             'host': 'localhost',
+#             'port': 27017,  # Default MongoDB port
+#         }
+#     }
+# }
 
 
 

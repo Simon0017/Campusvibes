@@ -2,11 +2,18 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from .models import *
 from django.contrib.auth.hashers import make_password,check_password
+import pymongo as py
+from bson import json_util
 
+# connecting to the connection string and the db
+conn = py.MongoClient("mongodb://localhost:27017/")
+db = conn['Campusvibes']
+
+# view handling the registration page
 def Registration(request):
     if request.method =='POST':
         fname = request.POST.get('FirstName')
-        lname = request.POST.get('Lastname')
+        lname = request.POST.get('LastName')
         userName = request.POST.get('Username')
         gender = request.POST.get('gender')
         email = request.POST.get('email')
@@ -16,26 +23,42 @@ def Registration(request):
         password = request.POST.get('password')
         hashedPassword = make_password(password)
         passw = request.POST.get('passw')
+
+        # specifying the collection name
+        coll = db['users']
+
         # check if the passwords match before inserting the data
         if (password==passw):
-            users.objects.create(fName = fname,lName = lname,userName = userName,gender = gender,
-                                email = email,address = address,institution = instituiton,picture =picture,
-                                password = hashedPassword)
+            coll.insert_one({'first_name':fname,
+                            'last_name':lname,
+                             'username':userName,
+                              'gender':gender,
+                               'email':email,
+                                'address':address,
+                                 'institution':instituiton,
+                                  'password':hashedPassword})
             return redirect("Users:Registration")
     
     return render(request,"Users/userRegistration.html")
 
 
+# view handling the login page
 def Login(request):
-    if request=='POST':
+    if request.method =='POST':
         userName = request.POST.get('Username')
         password = request.POST.get('passw')
+        # return render(request,"Users/registrationUsers.html")
+         
+        # specifying the collection name
+        coll = db['users']
 
-        username = users.objects.get(userName=username)
-        is_passw_valid = check_password(userName,userName.passsword)
+        username = coll.find_one({'username':userName})
+        is_passw_valid = check_password(password,username['password'])
 
-        if (is_passw_valid==True):
-            return render(request,"Users/registrationUsers.html")
+        if username and is_passw_valid:
+            return render(request,"Users/indexMain.html")
+        else:
+            return HttpResponse('Username or Password incorrect')
 
 
     return render(request,"Users/login.html")
