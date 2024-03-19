@@ -23,6 +23,8 @@
         <div class="templatemo-content-container " >
           <div class="templatemo-content-widget white-bg">
             <div class="panel panel-default table-responsive">
+              <form method ='post' action= "{% url 'Users:step_two' %}">
+                {% csrf_token %}
                 <table class="table table-striped table-bordered templatemo-user-table">
                   <thead>
                     <tr>
@@ -33,56 +35,28 @@
                       <td>Thursday</td>
                       <td>Friday</td>
                       <td>Saturday</td>
-                      <td>Sunday</td> 
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td><input class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
-                      <td><input class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
-                      <td><input class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
-                      <td><input class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
-                      <td><input class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
-                      <td><input class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
-                      <td> 
-                        <input class="form-control" type="text" placeholder="Input text" aria-label="default input example">
-                      </td>
-                      <td><input class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
-                    </tr>
-                    <tr>
-                      <td>10am-1pm</td>
-                      <td>2.</td>
-                      <td>Bill</td>
-                      <td>Jones</td>
-                      <td>@bJ</td>
-                      <td>bj@company.com</td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td>1pm-4pm</td>
-                      <td>3.</td>
-                      <td>Mary</td>
-                      <td>James</td>
-                      <td>@mJ</td>
-                      <td>mj@company.com</td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td>4pm-7pm</td>
-                      <td>4.</td>
-                      <td>Steve</td>
-                      <td>Bride</td>
-                      <td>@sB</td>
-                      <td>sb@company.com</td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                                        
+                  {% for x in Range %}
+                  <tr>
+                    <td><input name = "period{{forloop.counter0}}" class="form-control" type="text" placeholder="Input Time period" aria-label="default input example"></td>
+                    <td><input name = "m{{forloop.counter0}}" class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
+                    <td><input name = "tu{{forloop.counter0}}" class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
+                    <td><input name = "w{{forloop.counter0}}" class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
+                    <td><input name = "th{{forloop.counter0}}" class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
+                    <td><input name = "f{{forloop.counter0}}" class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
+                    <td><input name = "s{{forloop.counter0}}" class="form-control" type="text" placeholder="Input text" aria-label="default input example"></td>
+                  </tr>
+                  {% endfor %}                     
                   </tbody>
-                </table>    
-              </div>        
+                </table>   
+              </div> 
+              <div class="form-group text-right">
+                <button type="submit" class="templatemo-blue-button">Update</button>
+                <button type="reset" class="templatemo-white-button">Reset</button>
+              </div>   
+            </form>        
           </div>
           <footer class="text-right">
             <p>Copyright &copy; 2084 Company Name 

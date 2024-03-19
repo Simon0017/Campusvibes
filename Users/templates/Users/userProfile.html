@@ -1,0 +1,130 @@
+{% extends "Users/testingNav.html" %}
+{% load static %}
+{% block title %}
+Profile
+{% endblock title %}
+{% block content %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<div class="container bootdey flex-grow-1 container-p-y">
+
+            <div class="media align-items-center py-3 mb-3">
+              <img src="{% static 'Users/images/simon.jpg' %}" alt="" class="d-block ui-w-100 rounded-circle" style = 'margin-top:10px;border-radius:50%'>
+              <div class="media-body ml-4">
+                <h4 class="font-weight-bold mb-0">{{data.first_name}} {{data.last_name}}<span class="text-muted font-weight-normal">||{{data.user_name}}</span></h4>
+                <div class="text-muted mb-2">ID: 3425433</div>
+                <a href="javascript:void(0)" class="btn btn-primary btn-sm">Edit</a>&nbsp;
+                <a href="javascript:void(0)" class="btn btn-default btn-sm">Profile</a>&nbsp;
+              </div>
+            </div>
+
+           
+
+            <div class="card">
+              <hr class="border-light m-0">
+              <div class="card-body">
+                <table class="table user-view-table m-0">
+                  <tbody>
+                    <tr>
+                      <td>Username:</td>
+                      <td>{{data.user_name}}</td>
+                    </tr>
+                    <tr>
+                      <td>Name:</td>
+                      <td>{{data.first_name}} {{data.last_name}}</td>
+                    </tr>
+                    <tr>
+                      <td>E-mail:</td>
+                      <td>{{data.email}}</td>
+                    </tr>
+                    <tr>
+                      <td>Institution:</td>
+                      <td>{{data.institution}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h6 class="profile_h">Social links</h6>
+
+                <table class="table user-view-table m-0">
+                  <tbody>
+                    <tr>
+                      <td>Twitter:</td>
+                      <td><a href="javascript:void(0)">https://twitter.com/user</a></td>
+                    </tr>
+                    <tr>
+                      <td>Facebook:</td>
+                      <td><a href="javascript:void(0)">https://www.facebook.com/user</a></td>
+                    </tr>
+                    <tr>
+                      <td>Instagram:</td>
+                      <td><a href="javascript:void(0)">https://www.instagram.com/user</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h6 class="profile_h">Personal info</h6>
+
+                <table class="table user-view-table m-0">
+                  <tbody>
+                    <tr>
+                      <td>Birthday:</td>
+                      <td>May 3, 1995</td>
+                    </tr>
+                    <tr>
+                      <td>Country:</td>
+                      <td>Canada</td>
+                    </tr>
+                    <tr>
+                      <td>Languages:</td>
+                      <td>English</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h6 class="profile_h">Contacts</h6>
+
+                <table class="table user-view-table m-0">
+                  <tbody>
+                    <tr>
+                      <td>Phone:</td>
+                      <td>+0 (123) 456 7891</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h6 class="profile_h">Interests</h6>
+
+                <table class="table user-view-table m-0">
+                  <tbody>
+                    <tr>
+                      <td>Favorite music:</td>
+                      <td>
+                        Rock,
+                        Alternative,
+                        Electro,
+                        Drum &amp; Bass,
+                        Dance
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Favorite movies:</td>
+                      <td>
+                        The Green Mile,
+                        Pulp Fiction,
+                        Back to the Future,
+                        WALL·E,
+                        Django Unchained,
+                        The Truman Show,
+                        Home Alone,
+                        Seven Pounds
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+
+          </div>
+
+{% endblock content %}

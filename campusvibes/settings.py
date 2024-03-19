@@ -85,7 +85,14 @@ WSGI_APPLICATION = 'campusvibes.wsgi.application'
 #     }
 # }
 
+SESSION_ENGINE= 'django.contrib.sessions.backends.cache'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "c:/onedrive/desktop/campusvibes",
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

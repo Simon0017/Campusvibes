@@ -64,25 +64,26 @@ Schedules
             <div class="panel panel-default margin-10">
               <div class="panel-heading"><h2 class="text-uppercase">Create new schedule</h2></div>
               <div class="panel-body">
-                <form class="templatemo-login-form">
+                <form class="templatemo-login-form" action = '{% url "Users:schedule" %}' method='post' enctype="multipart/form-data">
+                  {% csrf_token %}
                   <div class="form-group">
                     <label for="inputEmail">Name</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Name of room">
+                    <input type="text" name = 'room_name' class="form-control" id="inputEmail" placeholder="Name of room">
                   </div>
                   <div class="col-lg-12 col-md-12 form-group"> 
                     <label class="control-label templatemo-block">Type of room</label>                 
-                    <select class="form-control">
-                      <option value="html">Public</option>
-                      <option value="plain">Private</option>                      
+                    <select class="form-control" name = 'room_type'>
+                      <option value="public">Public</option>
+                      <option value="private">Private</option>                      
                     </select>
                   </div>
                   <div class="form-group">                      
                     <label for="inputEmail">Brief description</label>
-                    <input type="textarea" class="form-control" placeholder="5-10 words">                                 
+                    <input type="textarea" name='description' class="form-control" placeholder="5-10 words">                                 
                   </div>              
                   
                   <div class="form-group">
-                    <button type="submit" class="templatemo-blue-button"><a href="{% url 'Users:createTable' %}">Next</a> </button>
+                    <button type="submit" class="templatemo-blue-button">Next</button>
                   </div>
                 </form>
               </div>                
@@ -142,46 +143,9 @@ Schedules
               </table>
             </div>             
           </div>
-          {% comment %} <div class="templatemo-content-widget white-bg col-1 text-center templatemo-position-relative">
-            <i class="fa fa-times"></i>
-            <img src="images/person.jpg" alt="Bicycle" class="img-circle img-thumbnail margin-bottom-30">
-            <h2 class="text-uppercase blue-text margin-bottom-5">Paul Smith</h2>
-            <h3 class="text-uppercase margin-bottom-70">Managing Director</h3>
-            <div class="templatemo-social-icons-container">
-              <div class="social-icon-wrap">
-                <i class="fa fa-facebook templatemo-social-icon"></i>  
-              </div>
-              <div class="social-icon-wrap">
-                <i class="fa fa-twitter templatemo-social-icon"></i>  
-              </div>
-              <div class="social-icon-wrap">
-                <i class="fa fa-google-plus templatemo-social-icon"></i>  
-              </div>                
-            </div> {% endcomment %}
+          
           </div>
-          {% comment %} <div class="templatemo-content-widget white-bg col-1 templatemo-position-relative templatemo-content-img-bg">
-            <img src="images/sunset-big.jpg" alt="Sunset" class="img-responsive content-bg-img">
-            <i class="fa fa-heart"></i>
-            <h2 class="templatemo-position-relative white-text">Sunset</h2>
-            <div class="view-img-btn-wrap">
-              <a href="" class="btn btn-default templatemo-view-img-btn">View</a>  
-            </div>              
-          </div>
-        </div> {% endcomment %}
-        {% comment %} <div class="pagination-wrap">
-          <ul class="pagination">
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li class="active"><a href="#">3 <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li>
-              <a href="#" aria-label="Next">
-                <span aria-hidden="true"><i class="fa fa-play"></i></span>
-              </a>
-            </li>
-          </ul>
-        </div>           {% endcomment %}
+          
         <footer class="text-right">
           <p>Copyright &copy; 2084 Company Name 
           | Design: Template Mo</p>

@@ -121,19 +121,15 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="chat-message clearfix">
-                            {% comment %} <div class="input-group mb-0">
-                                
-                                <input type="text" class="form-control" placeholder="Enter text here...">
-                                
-                                <span class="input-group-text"><i class="fa fa-send"></i></span>
-                                                                    
-                            </div> {% endcomment %}
-                            <div class="message-input">
-                                <input type="Textarea" placeholder="Type your message here..." name="">
-                                <button><span class="input-group-text"><i class="fa fa-send"></i></span></button>
-                            </div>
+                        <form method = 'post' action = "{% url 'Users:chat' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="chat-message clearfix">
+                                <div class="message-input">
+                                    <input type="Textarea" name="message" placeholder="Type your message here..."  required>
+                                    <button><span class="input-group-text"><i class="fa fa-send" type='submit'></i></span></button>
+                                </div>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>

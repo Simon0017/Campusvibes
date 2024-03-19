@@ -3,89 +3,340 @@ from django.http import HttpResponse
 from .models import *
 from django.contrib.auth.hashers import make_password,check_password
 import pymongo as py
-from bson import json_util
+from bson import json_util,ObjectId
+import datetime
+from mongoengine import *
+from Users.database import *
+from django.contrib.sessions.models import Session
+import datetime
+
 
 # connecting to the connection string and the db
 conn = py.MongoClient("mongodb://localhost:27017/")
-db = conn['Campusvibes']
+db = conn['Campusvibes_v2']
 
 # view handling the registration page
 def Registration(request):
     if request.method =='POST':
-        fname = request.POST.get('FirstName')
-        lname = request.POST.get('LastName')
-        userName = request.POST.get('Username')
-        gender = request.POST.get('gender')
-        email = request.POST.get('email')
-        address = request.POST.get('address')
-        instituiton = request.POST.get('institution')
-        picture = request.POST.get('picture')
-        password = request.POST.get('password')
-        hashedPassword = make_password(password)
-        passw = request.POST.get('passw')
+        # creating an instance of the class
+        user_info = user_data()
 
-        # specifying the collection name
-        coll = db['users']
+        # extracting the data and saaving them in the db
+        user_info.first_name = request.POST.get('FirstName')
+        user_info.last_name = request.POST.get('LastName')
+        user_info.user_name = request.POST.get('Username')
+        user_info.gender = request.POST.get('gender')
+        user_info.email = request.POST.get('email')
+        user_info.address = request.POST.get('address')
+        user_info.institution = request.POST.get('institution')
+        user_info.time_registered = datetime.datetime.now()
+        # picture = request.POST.get('picture')
+        password = request.POST.get('password')
+        user_info.password= make_password(password)
+        passw = request.POST.get('passw')
 
         # check if the passwords match before inserting the data
         if (password==passw):
-            coll.insert_one({'first_name':fname,
-                            'last_name':lname,
-                             'username':userName,
-                              'gender':gender,
-                               'email':email,
-                                'address':address,
-                                 'institution':instituiton,
-                                  'password':hashedPassword})
+            user_info.save()
             return redirect("Users:Registration")
+        else:
+            return HttpResponse('Please provide matching passwords')
     
     return render(request,"Users/userRegistration.html")
 
 
 # view handling the login page
+
 def Login(request):
-    if request.method =='POST':
-        userName = request.POST.get('Username')
+    if request.method == 'POST':
+        username = request.POST.get('Username')
         password = request.POST.get('passw')
-        # return render(request,"Users/registrationUsers.html")
-         
-        # specifying the collection name
-        coll = db['users']
+        
+        # Query the user_data collection for the username
+        user = user_data.objects(user_name=username).first()
 
-        username = coll.find_one({'username':userName})
-        is_passw_valid = check_password(password,username['password'])
-
-        if username and is_passw_valid:
-            return render(request,"Users/indexMain.html")
+        if user and check_password(password, user.password):
+            # Authentication successful, set session variables
+            request.session['username'] = user.user_name
+            request.session['user_id'] = str(user.pk)
+            print(request.session.get('username'))
+            return redirect('Users:index')
         else:
             return HttpResponse('Username or Password incorrect')
 
+    return render(request, "Users/login.html")
 
-    return render(request,"Users/login.html")
 
 
+# redundant view for the base template for all pages
 def testing(request):
     return render(request,'Users/testingNav.html')
 
+
+# view for the home page
 def index(request):
     return render(request,'Users/indexMain.html')
 
+
 def schedules(request):
+    if request.method =='POST':
+        # instance of the classes
+        room_data = rooms()
+
+        room_data.name = request.POST.get('room_name')
+        room_data.Type = request.POST.get('room_type')
+        room_data.room_description = request.POST.get('description')
+
+        # save and redirection
+        if room_data.save():
+            '''
+            here the program retrieves the data already submitted of the immediately created room 
+            and created a session of the room id which is destroyed immeadiately after the room details are 
+            updated
+            '''
+            room_retrv = rooms.objects(name=room_data.name).first()
+            request.session['room_id'] = str(room_retrv.pk)
+            return redirect('Users:createTable')
+        else:
+            return HttpResponse('Something went wrong pleae try again')
+        
     return render(request,'Users/Schedules.html')
 
 def createTable(request):
+    if request.method =='POST':
+        # create instance of the class
+        update = rooms()
+
+        # retrieve room data with the session created in the schedules view
+        data = rooms.objects(pk=request.session['room_id']).first()
+        data.format = request.POST.get('format')
+        data.administrators.append(request.session['username'])
+        data.members.append(request.session['username'])
+        data.no_of_time_div =request.POST.get('periods')
+
+        # get the user_data to save in the userdata.room field
+        user = user_data.objects(user_name = request.session['username']).first()
+        user.rooms.append(request.session['room_id'])
+
+        # save the update
+        if data.save() and user.save():
+            return redirect('Users:step_two')
+        else:
+            return HttpResponse('Something went wrong please try again')
+        
     return render(request,'Users/tableCreation.html')
 
-def createTable2(request):
-    return render(request,'Users/table_step2.html')
 
+# view for step two of table creation
+def createTable2(request):
+    # retrieve the data of the room
+    data = rooms.objects(pk=request.session['room_id']).first()
+    # create an empty list and add zeros to create a necceasry list for the template to loop through
+    my_list = []
+    for x in range(data.no_of_time_div):
+        my_list.append(0)
+    
+    context = {
+        "Range":my_list
+    }
+    if request.method=='POST':
+        # creating arrays as we are going to store data in arrays
+        periods = []
+        monday = []
+        tuesday =[]
+        wednesday = []
+        thursday = []
+        friday = []
+        saturday = []
+        for j in range(data.no_of_time_div):
+            periods.append(request.POST.get(f'period{j}'))
+            monday.append(request.POST.get(f'm{j}'))
+            tuesday.append(request.POST.get(f'tu{j}'))
+            wednesday.append(request.POST.get(f'w{j}'))
+            thursday.append(request.POST.get(f'th{j}'))
+            friday.append(request.POST.get(f'f{j}'))
+            saturday.append(request.POST.get(f's{j}'))
+        # retrieve room id and name
+        data = rooms.objects(pk=request.session['room_id']).first()
+        room_name = data.name
+
+        # create an instance of class inorder to save the file
+        table = timetables()
+        table.room_id = request.session['room_id']
+        table.room_name  = room_name
+        table.table.append(periods)
+        table.table.append(monday)
+        table.table.append(tuesday)
+        table.table.append(wednesday)
+        table.table.append(thursday)
+        table.table.append(friday)
+        table.table.append(saturday)
+
+        if table.save():
+            # try:
+            #     from django.utils import timezone
+            #     session = Session.objects.get(session_key='room_id')
+            #     # Optionally, you can check if the session is expired before deleting
+            #     if session.expire_date < timezone.now():
+            #         session.delete()
+            #     else:
+            #         print('Session already expired') # Session is already expired
+            # except Session.DoesNotExist:
+            #     print('Session doe not exist') # Session with given session key doesn't exist
+            # # session = request.session['room_id']
+            # # session.delete()
+            return redirect('Users:index') #save and reidrect back to the home page
+        else:
+            return HttpResponse('Try again.Something went wrong')
+
+
+    return render(request,'Users/table_step2.html',context)
+
+
+# view for the chat room
 def chatRooms(request):
+    if request.method =='POST':
+        # create a classes instances of the database collction
+        chat_details = chats()
+        comm = messages()
+
+        # data manipulation for messages
+        message_data  = request.POST.get('message')
+        time = datetime.datetime.now()
+        # chat_id = chat_list.find_one({'participants':'simon_cajetan'})
+        messages.insert_one({
+            # 'chat_id':chat_id['_id'],
+            'message':message_data,
+            'timestamp':time
+        })
+
+
+        return render(request,'Users/chatRoom.html')
+    
     return render(request,'Users/chatRoom.html')
 
 def scheduleRooms(request):
-    return render(request,'Users/scheduleRooms.html')
+    # checking the rooms in which the session ID is participating 
+    username = request.session['username']
+
+    # Fetch all rooms ID in which the user is in from the user_data.rooms
+    room_ID = user_data.objects(user_name = username).values_list('rooms').first()
+    print(room_ID)
+    
+    # Initialize variables
+    public_data = []
+    private_data = []
+    timetable_public = []
+    timetable_private = []
+    pub_data = []
+    priv_data = []
+    day = datetime.datetime.now().strftime('%A')
+    pub_time = []
+    priv_time = []
+    namePub = []
+    namePriv = []
+
+    for id in room_ID:
+        room = rooms.objects(pk = id).first()
+        if room.Type =='public':
+            table = timetables.objects(room_id = id).first()
+            # saving the data in list initialized aboce for the public instance
+            public_data.append(room)
+            timetable_public.append(table.table)
+            namePub.append(room.name)
+
+            # for the day data
+            if day == 'Monday':
+                pub_data.append(table.table[1])
+            elif day =='Tuesday':
+                pub_data.append(table.table[2])
+            elif day =='Wednesday':
+                pub_data.append(table.table[3])
+            elif day =='Thurday':
+                pub_data.append(table.table[4])
+            elif day =='Friday':
+                pub_data.append(table.table[5])
+            elif day =='Saturday':
+                pub_data.append(table.table[6])
+            else:
+                pub_data.append(table.table[1])
+
+            pub_time.append(table.table[0])
+
+        elif room.Type =='private':
+            table_priv =timetables.objects(room_id = id).first()
+            # saving the data for the private instance
+            private_data.append(room)
+            timetable_private.append(table_priv.table)
+            namePriv.append(room.name)
+
+            # for the day data
+            if day == 'Monday':
+                priv_data.append(table_priv.table[1])
+            elif day =='Tuesday':
+                priv_data.append(table_priv.table[2])
+            elif day =='Wednesday':
+                priv_data.append(table_priv.table[3])
+            elif day =='Thurday':
+                priv_data.append(table_priv.table[4])
+            elif day =='Friday':
+                priv_data.append(table_priv.table[5])
+            elif day =='Saturday':
+                priv_data.append(table_priv.table[6])
+            else:
+                priv_data.append(table_priv.table[1])
+
+            priv_time.append(table_priv.table[0])
+    
+     # Combine todayPub and timePub into a list of tuples
+    today_pub_combined = list(zip(pub_data, pub_time,namePub))
+
+    # Combine todayPriv and timePriv into a list of tuples
+    today_priv_combined = list(zip(priv_data, priv_time,namePriv))
+
+    print(public_data)
+    print(timetable_public)
+    print('todays')
+    print(pub_data)
+    print(namePub)
+    print('-----------------------------------------------------------------------------------')
+    print(today_pub_combined)
+    print('==================================================================================')
+    print('================PRIVATE=============================================================')
+    print(private_data)
+    print(timetable_private)
+    print('todays')
+    print(priv_data)
+    print(namePriv)
+    print('-----------------------------------------------------------------------------------')
+    print(today_priv_combined)
+     
+    context = {
+        'today':day,
+        'timetable_pub':timetable_public,
+        'timetable_priv':timetable_private,
+        'roomPriv':private_data,
+        'roomPub':public_data,
+        'todayPub':pub_data,
+        'todayPriv':priv_data,
+        'todayPubCombined': today_pub_combined,
+        'todayPrivCombined': today_priv_combined
+    }
+
+    return render(request,'Users/scheduleRooms.html',context)
 
 def advertisement(request):
     return render(request,'Users/advertisement.html')
+
+
+# view for the profile page
+
+def profile(request):
+    user_name = request.session['username']
+    user = user_data.objects(user_name=user_name).first()
+    context ={
+        'data':user
+    }
+    return render(request,'Users/userProfile.html',context)
 
 # Create your views here.
