@@ -3,13 +3,29 @@
 Rooms
 {% endblock title %}
 {% block content %}
-<div class="templatemo-content-container">         
-    <div class="templatemo-content-widget white-bg">
-      
-      <h2 class="margin-bottom-10">Rooms participating</h2>
+
+<script>
+  function showToday() {
+    document.getElementById('today').style.display = 'block';
+    document.getElementById('rooms').style.display = 'none';
+  }
+
+  function showRooms() {
+    document.getElementById('today').style.display = 'none';
+    document.getElementById('rooms').style.display = 'block';
+  }
+</script>
+
+
+<div class="templatemo-content-container">
+  <div class="templatemo-content-widget white-bg" style='display:flex;flex-wrap:wrap;'>
+    <button class="templatemo-blue-button" style='margin-left:35%' onclick="showToday()">Today</button>
+    <button class="templatemo-blue-button" style='margin-left:10px' onclick="showRooms()">View Rooms</button>
+  </div>         
+    <div class="templatemo-content-widget white-bg" id = 'today'>
       <div class="panel panel-default no-border">
         <div class="panel-heading border-radius-10">
-          <h2>Public Schedules</h2>
+          <h2>Public rooms</h2>
         </div>
         <div class="panel panel-default table-responsive">
           {% for x, y ,z in todayPubCombined %}
@@ -43,7 +59,7 @@ Rooms
       
       <div class="panel panel-default no-border">
         <div class="panel-heading border-radius-10">
-          <h2>Private Schedules</h2>
+          <h2>Private rooms</h2>
         </div>
         <div class="panel panel-default table-responsive">
           {% for x, y,z in todayPrivCombined %}
@@ -73,6 +89,19 @@ Rooms
                           
           </div>     
         </div>
-      </div>        
+      </div>  
+      
   </div>
+  <div class="templatemo-content-widget white-bg" id = 'rooms' style="display: none;">
+    <div class="container1">
+    <div class="column1 left-column">
+        <h2>Public</h2>
+        
+    </div>
+    <div class="column1 right-column">
+        <h2>Private</h2>
+        <p>This is some content for the right column.</p>
+    </div>
+  </div>
+  </div> 
 {% endblock content %}

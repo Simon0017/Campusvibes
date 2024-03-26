@@ -14,7 +14,8 @@ urlpatterns = [
      path('chat',views.chatRooms,name='chat'),
      path('Rooms',views.scheduleRooms,name='Rooms'),
      path('Ads',views.advertisement,name='Ads'),
-     path('profile',views.profile,name='profile')
+     path('profile',views.profile,name='profile'),
+     path('space',views.space,name='space'),
     
 
 ]

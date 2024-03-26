@@ -668,3 +668,21 @@ transform: scale(1.1);
     text-align: center;
 }
 
+.container1 {
+    display: flex;
+    flex-wrap: wrap;
+}
+.column1 {
+    flex: 1;
+    padding: 20px;
+}
+.left-column {
+}
+.right-column {
+}
+@media screen and (max-width: 600px) {
+    .column1 {
+        flex: 100%;
+    }
+}
+

@@ -320,7 +320,9 @@ def scheduleRooms(request):
         'todayPub':pub_data,
         'todayPriv':priv_data,
         'todayPubCombined': today_pub_combined,
-        'todayPrivCombined': today_priv_combined
+        'todayPrivCombined': today_priv_combined,
+        'namepub':namePub,
+        'namepriv':namePriv,
     }
 
     return render(request,'Users/scheduleRooms.html',context)
@@ -338,5 +340,8 @@ def profile(request):
         'data':user
     }
     return render(request,'Users/userProfile.html',context)
+
+def space(request):
+    return render(request,'Users/space.html')
 
 # Create your views here.
