@@ -221,7 +221,6 @@ def scheduleRooms(request):
 
     # Fetch all rooms ID in which the user is in from the user_data.rooms
     room_ID = user_data.objects(user_name = username).values_list('rooms').first()
-    print(room_ID)
     
     # Initialize variables
     public_data = []
@@ -294,22 +293,6 @@ def scheduleRooms(request):
     # Combine todayPriv and timePriv into a list of tuples
     today_priv_combined = list(zip(priv_data, priv_time,namePriv))
 
-    print(public_data)
-    print(timetable_public)
-    print('todays')
-    print(pub_data)
-    print(namePub)
-    print('-----------------------------------------------------------------------------------')
-    print(today_pub_combined)
-    print('==================================================================================')
-    print('================PRIVATE=============================================================')
-    print(private_data)
-    print(timetable_private)
-    print('todays')
-    print(priv_data)
-    print(namePriv)
-    print('-----------------------------------------------------------------------------------')
-    print(today_priv_combined)
      
     context = {
         'today':day,
@@ -341,7 +324,11 @@ def profile(request):
     }
     return render(request,'Users/userProfile.html',context)
 
-def space(request):
-    return render(request,'Users/space.html')
+def space(request,space):
+    room_name = space
+    context = {
+        'name':room_name
+    }
+    return render(request,'Users/space.html',context)
 
 # Create your views here.

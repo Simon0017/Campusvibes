@@ -15,7 +15,7 @@ urlpatterns = [
      path('Rooms',views.scheduleRooms,name='Rooms'),
      path('Ads',views.advertisement,name='Ads'),
      path('profile',views.profile,name='profile'),
-     path('space',views.space,name='space'),
+     path('space/<str:space>',views.space,name='space'),
     
 
 ]

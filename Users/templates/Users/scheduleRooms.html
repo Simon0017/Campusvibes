@@ -95,12 +95,21 @@ Rooms
   <div class="templatemo-content-widget white-bg" id = 'rooms' style="display: none;">
     <div class="container1">
     <div class="column1 left-column">
-        <h2>Public</h2>
+      <h2>Public</h2><br>
+      <ul>
+      {% for space in namepub %}
+      <li><a href = '{% url "Users:space" space %}'><button class="templatemo-blue-button" style = 'width:100%'>{{space}}</button></a></li><br>
+      {% endfor %}
+      </ul>
         
     </div>
     <div class="column1 right-column">
-        <h2>Private</h2>
-        <p>This is some content for the right column.</p>
+        <h2>Private</h2><br>
+        <ul>
+          {% for space in namepriv %}
+          <li><a href = '{% url "Users:space" space  %}'><button class="templatemo-blue-button" style = 'width:100%'>{{space}}</button></a></li><br>
+          {% endfor %}
+        </ul>
     </div>
   </div>
   </div> 
