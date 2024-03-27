@@ -39,6 +39,7 @@
             background-color: #fff;
             border-bottom-left-radius: 20px;
             border-top-left-radius: 20px;
+            text-decoration:none;
         }
 
         .menu-icon {
@@ -81,6 +82,8 @@
     </style>
     
     <link rel="icon" type="image/jpg" href="{% static 'Users/images/campus-vibes.png' %}">
+    <link href="{% static 'Users/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/css/bootstrap.min.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -98,21 +101,43 @@
         <li><a href="#contact">Chat</a></li>
         <li><a href="#contact">Resources</a></li>
         <li><a href="#about">Assignment</a></li>
-        <li><a href="#about">Settings</a></li>
+        <li><a href="#about">Settings</a></li><br><br>
+        <li><a href= "{% url 'Users:index' %}">Main Dashboard</a></li>
     </ul>
 
     <div class="content">
-        <h2>Fixed Full-height Side Nav</h2>
-        <h3>Try to scroll this area, and see how the sidenav sticks to the page</h3>
-        <p>Notice that this div element has no left margin anymore.</p>
-        <p>Also notice that we have set overflow:auto to sidenav. This will add a scrollbar when the sidenav is too long (for example if it has over 50 links inside of it).</p>
-        <p>Some text..</p>
-        <p>Some text..</p>
-        <p>Some text..</p>
-        <p>Some text..</p>
-        <p>Some text..</p>
-        <p>Some text..</p>
-        <p>Some text..</p>
+        <div>
+            <div id ='descrip' style = 'margin:30px 40px;'>
+                <p>Welcome to {{name}} space.This part is collapsible</p>
+            </div>
+
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <td></td>
+                    <td>Monday</td>
+                    <td>Tuesday</td>
+                    <td>Wednesday</td>
+                    <td>Thursday</td>
+                    <td>Friday</td>
+                    <td>Saturday</td>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for a,b,c,d,e,f,g in timetable  %}
+                <tr>
+                  <td>{{a}} </td>
+                  <td>{{b}} </td>
+                  <td>{{c}} </td>
+                  <td>{{d}} </td>
+                  <td>{{e}} </td>
+                  <td>{{f}}</td>
+                  <td>{{g}}</td>
+                </tr>
+                {% endfor %}                     
+                </tbody>
+              </table>  
+        </div>
     </div>
 
     <script>

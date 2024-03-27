@@ -325,9 +325,34 @@ def profile(request):
     return render(request,'Users/userProfile.html',context)
 
 def space(request,space):
-    room_name = space
+    table_data = timetables.objects(room_name = space).first()
+    table= table_data.table
+
+    periods = [x for x in table[0]]
+    monday = [x for x in table[1]]
+    tues = [x for x in table[2]]
+    wed = [x for x in table[3]]
+    thurs = [x for x in table[4]]
+    fri = [x for x in table[5]]
+    sat = [x for x in table[6]]
+
+    timetable1 = list(zip(periods,monday,tues,wed,thurs,fri,sat))
+    print('=========================================================================')
+    print(table)
+    print('-------------------------------------------------------------------------')
+    print(table_data)
+    print('=========================================================================')
+    print(periods)
+    print(monday)
+    print(tues)
+    print('===============================================================')
+    print(timetable1)
     context = {
-        'name':room_name
+        'name':space,
+        # 'timetable':table,
+        'tableData':table_data,
+        'ranges':periods,
+        'timetable':timetable1,
     }
     return render(request,'Users/space.html',context)
 
