@@ -676,10 +676,13 @@ transform: scale(1.1);
     flex: 1;
     padding: 20px;
 }
-.left-column {
+/* .left-column {
 }
 .right-column {
-}
+} */
+
+
+  
 @media screen and (max-width: 600px) {
     .column1 {
         flex: 100%;

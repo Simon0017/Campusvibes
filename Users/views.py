@@ -337,19 +337,10 @@ def space(request,space):
     sat = [x for x in table[6]]
 
     timetable1 = list(zip(periods,monday,tues,wed,thurs,fri,sat))
-    print('=========================================================================')
-    print(table)
-    print('-------------------------------------------------------------------------')
-    print(table_data)
-    print('=========================================================================')
-    print(periods)
-    print(monday)
-    print(tues)
-    print('===============================================================')
-    print(timetable1)
+
     context = {
         'name':space,
-        # 'timetable':table,
+        'table':table,
         'tableData':table_data,
         'ranges':periods,
         'timetable':timetable1,
