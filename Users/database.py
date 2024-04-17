@@ -26,11 +26,12 @@ class quotes(Document):
     text = StringField()
 
 class chats(Document):
-    reference_id = StringField()
-    contacts = ListField(StringField())
+    reference_id = ReferenceField(user_data)
+    contacts = StringField(max_length=100)
     time_created = DateTimeField()
 
 class messages(DynamicDocument):
+    chat_id = ReferenceField(chats)
     sender = StringField(max_length=50)
     message = DynamicField()
     timestamp = DateTimeField()
@@ -51,5 +52,15 @@ class timetables(Document):
     room_id = StringField()
     room_name = StringField()
     table = ListField(ListField())
+    timestamp = DateTimeField()
+
+class resources(Document):
+    room_id = ReferenceField(rooms)
+    category = StringField()
+    file = FileField()
+    text = StringField()
+    timestamp = DateTimeField()
+
+
 
 

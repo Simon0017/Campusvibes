@@ -12,8 +12,8 @@ import datetime
 
 
 # connecting to the connection string and the db
-conn = py.MongoClient("mongodb://localhost:27017/")
-db = conn['Campusvibes_v2']
+# conn = py.MongoClient("mongodb://localhost:27017/")
+# db = conn['Campusvibes_v2']
 
 # view handling the registration page
 def Registration(request):
@@ -77,7 +77,7 @@ def testing(request):
 def index(request):
     return render(request,'Users/indexMain.html')
 
-
+# view for manage schedules
 def schedules(request):
     if request.method =='POST':
         # instance of the classes
@@ -102,6 +102,7 @@ def schedules(request):
         
     return render(request,'Users/Schedules.html')
 
+# view on the second stage of creating the table
 def createTable(request):
     if request.method =='POST':
         # create instance of the class
@@ -195,26 +196,26 @@ def createTable2(request):
 
 # view for the chat room
 def chatRooms(request):
-    if request.method =='POST':
-        # create a classes instances of the database collction
-        chat_details = chats()
-        comm = messages()
+    if request.method == 'POST':
+        query = request.POST.get('contacts')
+        user_id = request.session['user_id']
+        
+        # Check if a chat object already exists for the given user and contacts
+        chat = chats.objects.filter(reference_id=user_id, contacts=query).first()
+        
+        # If chat object does not exist, create a new one
+        if not chat:
+            chat = chats(reference_id=user_id, contacts=query, time_created=datetime.datetime.now())
+            chat.save()
+        
+        context = {
+            'contact': chat
+        }
+        return render(request, 'Users/chatRoom.html', context)
+    return render(request, 'Users/chatRoom.html')
 
-        # data manipulation for messages
-        message_data  = request.POST.get('message')
-        time = datetime.datetime.now()
-        # chat_id = chat_list.find_one({'participants':'simon_cajetan'})
-        messages.insert_one({
-            # 'chat_id':chat_id['_id'],
-            'message':message_data,
-            'timestamp':time
-        })
 
-
-        return render(request,'Users/chatRoom.html')
-    
-    return render(request,'Users/chatRoom.html')
-
+# view for the spaces /rooms interface
 def scheduleRooms(request):
     # checking the rooms in which the session ID is participating 
     username = request.session['username']
@@ -251,7 +252,7 @@ def scheduleRooms(request):
                 pub_data.append(table.table[2])
             elif day =='Wednesday':
                 pub_data.append(table.table[3])
-            elif day =='Thurday':
+            elif day =='Thursday':
                 pub_data.append(table.table[4])
             elif day =='Friday':
                 pub_data.append(table.table[5])
@@ -310,6 +311,7 @@ def scheduleRooms(request):
 
     return render(request,'Users/scheduleRooms.html',context)
 
+# view for advertisement
 def advertisement(request):
     return render(request,'Users/advertisement.html')
 
@@ -324,6 +326,7 @@ def profile(request):
     }
     return render(request,'Users/userProfile.html',context)
 
+# view for the space panel
 def space(request,space):
     table_data = timetables.objects(room_name = space).first()
     table= table_data.table

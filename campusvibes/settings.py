@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'Users',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -68,7 +69,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'campusvibes.wsgi.application'
+# WSGI_APPLICATION = 'campusvibes.wsgi.application'
+ASGI_APPLICATION = 'campusvibes.asgi.application'
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 
 # Database
