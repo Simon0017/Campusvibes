@@ -200,20 +200,41 @@ def chatRooms(request):
         query = request.POST.get('contacts')
         user_id = request.session['user_id']
         
-        # Check if a chat object already exists for the given user and contacts
-        chat = chats.objects.filter(reference_id=user_id, contacts=query).first()
-        
-        # If chat object does not exist, create a new one
-        if not chat:
-            chat = chats(reference_id=user_id, contacts=query, time_created=datetime.datetime.now())
-            chat.save()
-        
-        context = {
-            'contact': chat
-        }
-        return render(request, 'Users/chatRoom.html', context)
-    return render(request, 'Users/chatRoom.html')
+        #first check if the userbam eis registered before Check if a chat object already exists for the given user and contacts
+        check = user_data.objects(user_name = query).values_list('user_name')
+        if check:
+            chat = chats.objects.filter(reference_id=user_id, contacts=query).first() 
+            
+            # If chat object does not exist, create a new one
+            if not chat:
+                chat = chats(reference_id=user_id, contacts=query, time_created=datetime.datetime.now())
+                chat.save()
+            
+            return redirect("Users:chat")
+        else:
+            return HttpResponse("The User doesnt exist.Please try again.")
+    # retrieve all the chats associated with that id 
+    user_id = request.session['user_id']
+    contacts = chats.objects(reference_id = user_id).values_list('contacts')
 
+    context = {
+        'contact':contacts,
+    }
+
+
+    return render(request, 'Users/chatRoom.html',context)
+
+# view for the chat area
+def chat(request,x):
+    # retrieve all the chats associated with that id 
+    user_id = request.session['user_id']
+    contacts = chats.objects(reference_id = user_id).values_list('contacts')
+
+    context = {
+        'contact':contacts,
+        'name':x,
+    }
+    return render(request,'Users/chat.html',context)
 
 # view for the spaces /rooms interface
 def scheduleRooms(request):
