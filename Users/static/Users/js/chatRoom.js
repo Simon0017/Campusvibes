@@ -5,6 +5,8 @@ const roomName = JSON.parse(document.getElementById('roomName').textContent);
 let chatSocket = null
 let chatInput  = document.querySelector('#message');
 let chatMessageSend =document.querySelector('#chatSend');
+const username = JSON.parse(document.getElementById('username').textContent); //from views.py
+console.log(username);
 
 console.log(roomName);
 chatInput.focus();
@@ -21,6 +23,7 @@ chatMessageSend.onclick = function() {
     if (chatInput.value.length === 0) return;
     chatSocket.send(JSON.stringify({
         "message": chatInput.value,
+        'username':username,
     }));
     chatInput.value = "";
 };
@@ -30,6 +33,10 @@ function connect(){
     
     chatSocket.onopen = function(e) {
         console.log("Successfully connected to the WebSocket.");
+        var initialData = {
+            'username': username,
+        }
+        chatSocket.send(JSON.stringify(initialData)); //send the initial data via the webconsumer
     }
 
     chatSocket.onclose = function(e) {

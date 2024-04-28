@@ -1,0 +1,73 @@
+// Function to add a message to the chat history
+function addMessageToChatHistory(messageData) {
+    const chatHistory = document.querySelector('.chat-history ul');
+    const { message, sender, timestamp } = messageData;
+    
+    const messageItem = document.createElement('li');
+    messageItem.classList.add('clearfix');
+
+    const messageDataContainer = document.createElement('div');
+    messageDataContainer.classList.add('message-data');
+    
+    const messageTime = document.createElement('span');
+    messageTime.classList.add('message-data-time');
+    messageTime.textContent = timestamp;
+    messageDataContainer.appendChild(messageTime);
+
+    const messageContent = document.createElement('div');
+    messageContent.classList.add('message');
+    if (sender === '{{ name }}') {
+        messageItem.classList.add('float-right');
+        messageContent.classList.add('my-message');
+    } else {
+        messageContent.classList.add('other-message');
+    }
+    messageContent.textContent = message;
+    
+    messageItem.appendChild(messageDataContainer);
+    messageItem.appendChild(messageContent);
+    
+    chatHistory.appendChild(messageItem);
+}
+
+// Function to handle incoming messages from the WebSocket
+function handleIncomingMessage(data) {
+    const messageData = JSON.parse(data);
+    addMessageToChatHistory(messageData);
+}
+
+// Function to send a message via WebSocket
+function sendMessage(message) {
+    if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
+        console.error('WebSocket is not connected.');
+        return;
+    }
+    chatSocket.send(JSON.stringify({
+        "message": message,
+    }));
+}
+
+// Event listener for sending a message when clicking the send button
+chatMessageSend.addEventListener('click', function() {
+    const messageInput = document.querySelector('#message');
+    const message = messageInput.value.trim();
+    if (message) {
+        sendMessage(message);
+        messageInput.value = '';
+    }
+});
+
+// Event listener for sending a message when pressing Enter key
+chatInput.addEventListener('keyup', function(e) {
+    if (e.keyCode === 13) {
+        const messageInput = document.querySelector('#message');
+        const message = messageInput.value.trim();
+        if (message) {
+            sendMessage(message);
+            messageInput.value = '';
+        }
+    }
+});
+
+// Establish WebSocket connection
+connect();

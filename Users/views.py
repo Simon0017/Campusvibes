@@ -9,6 +9,7 @@ from mongoengine import *
 from Users.database import *
 from django.contrib.sessions.models import Session
 import datetime
+from django.contrib.sessions.backends.db import SessionStore
 
 
 # connecting to the connection string and the db
@@ -217,6 +218,7 @@ def chatRooms(request):
     user_id = request.session['user_id']
     contacts = chats.objects(reference_id = user_id).values_list('contacts')
 
+    username = request.session['username']
     context = {
         'contact':contacts,
     }
@@ -230,9 +232,13 @@ def chat(request,x):
     user_id = request.session['user_id']
     contacts = chats.objects(reference_id = user_id).values_list('contacts')
 
+
+    username = request.session['username']
+    
     context = {
         'contact':contacts,
         'name':x,
+        'username':username,
     }
     return render(request,'Users/chat.html',context)
 
