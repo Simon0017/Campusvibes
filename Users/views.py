@@ -231,10 +231,8 @@ def chat(request,x):
     # retrieve all the chats associated with that id 
     user_id = request.session['user_id']
     contacts = chats.objects(reference_id = user_id).values_list('contacts')
-
-
     username = request.session['username']
-    
+       
     context = {
         'contact':contacts,
         'name':x,
