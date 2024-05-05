@@ -482,3 +482,7 @@ textarea:focus {
         right: 10px;
     }
 }
+
+.flow{
+    overflow-y: scroll;
+}

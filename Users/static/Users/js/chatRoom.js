@@ -1,8 +1,9 @@
 // chatRoom.js
 console.log("sanity check from chatRoom.html");
 
+// define the variable and debug from the console
 const roomName = JSON.parse(document.getElementById('roomName').textContent);
-let chatSocket = null
+let chatSocket = null;
 let chatInput  = document.querySelector('#message');
 let chatMessageSend =document.querySelector('#chatSend');
 const username = JSON.parse(document.getElementById('username').textContent); //from views.py
@@ -27,6 +28,56 @@ chatMessageSend.onclick = function() {
     chatInput.value = "";
 };
 
+// function to display the messages 
+function addMessageToChatHistory(message,sender) {
+    const chatHistory = document.querySelector('.container-two ul');
+    
+    const messageItem = document.createElement('li');
+    messageItem.classList.add('message');
+
+    const time = document.createElement('p');
+    time.classList.add('time');
+    const timeSpec = new Date();
+    var hr = timeSpec.getHours();
+    var min = timeSpec.getMinutes();
+    // tail is the AM or PM
+    var tail = '';
+    if (hr>=12){
+        tail = 'PM';
+        hr -=12;
+    }else{
+        tail = 'AM';
+    }
+
+    if (min < 10){
+        min = '0'+ min;
+    }
+
+    time.textContent = hr + ':' + min + '' +tail;
+    
+    const messageData = document.createElement('div');
+
+    const avatar = document.createElement('img');
+
+    
+    if (sender === username) {
+        time.classList.add('time-rg')
+        messageData.classList.add('float-rg');
+    }else {
+        messageData.classList.add('float-lf');
+        avatar.classList.add('avatar');
+        avatar.src = "{% static'Users/images/simon.jpg' %}";
+        avatar.alt = '';
+    }
+    messageData.textContent = message;
+    
+    messageItem.appendChild(time);
+    // messageItem.appendChild(messageContent);
+    messageItem.appendChild(messageData);
+    
+    chatHistory.appendChild(messageItem);
+}
+
 function connect(){
     chatSocket = new WebSocket("ws://" + window.location.host + "/ws/Users/chat_room/" + roomName + "/")
     
@@ -46,7 +97,7 @@ function connect(){
         console.log(data)
         switch (data.type) {
             case "chat_message":
-                
+                addMessageToChatHistory(data.message,data.user);
                 break;
         
             default:

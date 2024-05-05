@@ -1,0 +1,93 @@
+{% extends "Users/testingNav.html" %}
+{% load static %}
+{% block title %}Chat-{{name}} {% endblock  %}
+{% block  topnav %}{% endblock  %}
+{% block content %}
+    <link rel = "stylesheet" href = "{% static 'Users/css/userChat.css' %}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <div class="flex-container">
+        <div class="container-one">
+            <p class="heading">Contacts</p>
+            <div class="input-group" style="margin-left: 10px;">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                </div>
+                <form method = "post" action ='{% url "Users:chat" %}'>
+                    {% csrf_token %}
+                    <input id = "search" type="text" class="form-control" placeholder="Search..." name = "contacts">
+                </form>
+            </div><br>
+            <div class="ajax">I am not visible</div>
+            <ul>
+                {% for x in contact %}
+                <a href = '{% url "Users:chat_room" x  %}'>
+                    <li class="list">
+                        <img class="avatar" src="{% static 'Users/images/simon.jpg' %}" alt = "">
+                        <div class="contact-cont">
+                            <div class="cont-head">{{x}} </div>
+                            <div class="cont-rest">
+                                <div class="cont-mess">
+                                        I am not feeling well
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </a>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="container-two" style="overflow-y: auto;">
+            <div class="chat-header clearfix" style="padding-left: 20px;">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                            <img class="avatar" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                        </a>
+                        <div class="chat-about">
+                            <h6 class="m-b-0"> {{name}} </h6>
+                            <small>Last seen: 2 hours ago</small>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 hidden-sm text-right">
+                        <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
+                        <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
+                        <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
+                        <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a>
+                    </div>
+                </div>
+            </div>
+            <ul>
+                {% comment %} <li class="message">
+                    <p class="time time-rg">18.18 Pm</p>
+                    <div class="float-rg">Hello buddy</div>
+                </li>
+                <li class="message">
+                    <img class="avatar" src="{% static 'Users/images/simon.jpg' %}" alt = "">
+                    <p class="time">18.18 Pm</p>
+                    <div class="float-lf">Wassup loser</div>
+                </li>
+                <li class="message">
+                    <div class="float-rg">Hello buddy</div>
+                </li>
+                <li class="message">
+                    <img class="avatar" src="{% static 'Users/images/simon.jpg' %}" alt = "">
+                    <div class="float-lf">Wassup</div>
+                </li>
+                <li class="message">
+                    <div class="float-rg">Hello buddy</div>
+                </li>
+                <li class="message">
+                    <div class="float-lf">Hello buddy</div>
+                </li> {% endcomment %}
+            </ul>
+            {% comment %} <textarea type = "text" placeholder="Type your message" id = 'message'></textarea> {% endcomment %}
+            <input  class = "messData form-control form-control-lg" type = "text" placeholder="Type your message" id = 'message'>
+            <button id = "chatSend"><span class="input-group-text"><i class="fa fa-send" ></i></span></button>
+        </div>
+    </div>
+    {{name|json_script:"roomName"}}
+    {{username|json_script:'username'}}
+    <script type="text/javascript" src="{% static 'Users/js/chatRoom.js' %}"></script>
+    <script type="text/javascript" src="{% static 'Users/js/jquery-1.11.2.min.js' %}"></script>
+{% endblock  %}

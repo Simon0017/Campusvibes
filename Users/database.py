@@ -27,6 +27,7 @@ class quotes(Document):
 
 class chats(Document):
     reference_id = ReferenceField(user_data)
+    reference_contact = StringField(max_length=250)
     contacts = StringField(max_length=100)
     time_created = DateTimeField()
 
