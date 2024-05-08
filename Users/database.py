@@ -26,13 +26,13 @@ class quotes(Document):
     text = StringField()
 
 class chats(Document):
-    reference_id = ReferenceField(user_data)
+    reference_id = StringField(max_length=250)
     reference_contact = StringField(max_length=250)
-    contacts = StringField(max_length=100)
+    contacts = ListField(StringField(max_length=250))
     time_created = DateTimeField()
 
 class messages(DynamicDocument):
-    chat_id = ReferenceField(chats)
+    chat_id = StringField(max_length=250)
     sender = StringField(max_length=50)
     message = DynamicField()
     timestamp = DateTimeField()

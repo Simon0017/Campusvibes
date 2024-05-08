@@ -17,6 +17,7 @@ urlpatterns = [
      path('profile',views.profile,name='profile'),
      path('space/<str:space>',views.space,name='space'),
      path('chat_room/<str:x>',views.chat,name = "chat_room"),
+     path('join',views.joinRoom,name = 'join'),
     
 
 ]

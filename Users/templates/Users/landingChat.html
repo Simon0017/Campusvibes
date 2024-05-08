@@ -1,6 +1,6 @@
 {% extends "Users/testingNav.html" %}
 {% load static %}
-{% block title %}Chat-{{buddy}} {% endblock  %}
+{% block title %}Chat{% endblock  %}
 {% block  topnav %}{% endblock  %}
 {% block content %}
     <link rel = "stylesheet" href = "{% static 'Users/css/userChat.css' %}">
@@ -22,7 +22,7 @@
             <ul>
                 {% for w,x in data %}
                 <a href = '{% url "Users:chat_room" x  %}'>
-                    <li class="list ">
+                    <li class="list">
                         <img class="avatar" src="{% static 'Users/images/simon.jpg' %}" alt = "">
                         <div class="contact-cont">
                             <div class="cont-head">{{w}} </div>
@@ -82,16 +82,9 @@
                 </li> {% endcomment %}
             </ul>
             {% comment %} <textarea type = "text" placeholder="Type your message" id = 'message'></textarea> {% endcomment %}
-            
+            <input  class = "messData form-control form-control-lg" type = "text" placeholder="Type your message" id = 'message'>
+            <button id = "chatSend"><span class="input-group-text"><i class="fa fa-send" ></i></span></button>
         </div>
     </div>
-    <div class= 'textarea'>
-        <input  class = "messData form-control form-control-lg" type = "text" placeholder="Type your message" id = 'message'>
-        <button id = "chatSend"><span class="input-group-text"><i class="fa fa-send" ></i></span></button>
-    </div>
-    {{name|json_script:"roomName"}}
-    {{username|json_script:'username'}}
-    {{room_id|json_script:'roomId'}}
-    <script type="text/javascript" src="{% static 'Users/js/chatRoom.js' %}"></script>
     <script type="text/javascript" src="{% static 'Users/js/jquery-1.11.2.min.js' %}"></script>
 {% endblock  %}

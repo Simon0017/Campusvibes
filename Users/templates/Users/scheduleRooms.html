@@ -19,8 +19,9 @@ Rooms
 
 <div class="templatemo-content-container">
   <div class="templatemo-content-widget white-bg" style='display:flex;flex-wrap:wrap;'>
-    <button class="templatemo-blue-button" style='margin-left:35%' onclick="showToday()">Today</button>
+    <button class="templatemo-blue-button" style='margin-left:25%' onclick="showToday()">Today</button>
     <button class="templatemo-blue-button" style='margin-left:10px' onclick="showRooms()">View Rooms</button>
+    <button class="templatemo-blue-button" style='margin-left:10px;color:white;'><a href = '{% url "Users:join" %}' style='color:white;'>Join Room</a></button>
   </div>         
     <div class="templatemo-content-widget white-bg" id = 'today'>
       <div class="panel panel-default no-border">
@@ -97,8 +98,8 @@ Rooms
     <div class="column1 left-column">
       <h2>Public</h2><br>
       <ul>
-      {% for space in namepub %}
-      <li><a href = '{% url "Users:space" space %}'><button class="templatemo-blue-button" style = 'width:100%'>{{space}}</button></a></li><br>
+      {% for name,space in namepub %}
+      <li><a href = '{% url "Users:space" space %}'><button class="templatemo-blue-button" style = 'width:100%'>{{name}}</button></a></li><br>
       {% endfor %}
       </ul>
         
@@ -106,8 +107,8 @@ Rooms
     <div class="column1 right-column">
         <h2>Private</h2><br>
         <ul>
-          {% for space in namepriv %}
-          <li><a href = '{% url "Users:space" space  %}'><button class="templatemo-blue-button" style = 'width:100%'>{{space}}</button></a></li><br>
+          {% for name,space in namepriv %}
+          <li><a href = '{% url "Users:space" space  %}'><button class="templatemo-blue-button" style = 'width:100%'>{{name}}</button></a></li><br>
           {% endfor %}
         </ul>
     </div>

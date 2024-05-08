@@ -10,6 +10,7 @@ from Users.database import *
 from django.contrib.sessions.models import Session
 import datetime
 from django.contrib.sessions.backends.db import SessionStore
+from django.urls import reverse
 
 
 # connecting to the connection string and the db
@@ -197,50 +198,52 @@ def createTable2(request):
 
 # view for the chat room
 def chatRooms(request):
+
     if request.method == 'POST':
         query = request.POST.get('contacts')
         user_id = request.session['user_id']
-        
-        #first check if the userbam eis registered before Check if a chat object already exists for the given user and contacts
+        username  = request.session['username']
+
+        # first check if the query ie th user being checked exists
         check = user_data.objects(user_name = query).values_list('user_name')
+        # next check if the chat object exists ie if there is a contact field that contans both the query and the username
         if check:
-            chat = chats.objects.filter(reference_id=user_id, contacts=query).first() 
-            
-            # If chat object does not exist, create a new one
-            if not chat:
-                chat = chats(reference_id=user_id,reference_contact = request.session['username'],  contacts=query, time_created=datetime.datetime.now())
+            chat = chats.objects.filter(contacts__all=[query, username]).first()
+
+            if chat:
+                return redirect(reverse('Users:chat')) # this is the url pattern passed as argument
+            else:
+                items=[query,username]
+                chat = chats(reference_id=user_id,reference_contact = username,  contacts=items, time_created=datetime.datetime.now())
                 chat.save()
-            
-            return redirect("Users:chat")
+                return redirect(reverse('Users:chat'))
         else:
-            return HttpResponse("The User doesnt exist.Please try again.")
+            return HttpResponse('User does not exist')    
         
-    # retrieve all the chats associated with that id 
-    user_id = request.session['user_id']
 
-    # created a contact list
+    # next find all the chat contacts the user is associated in
+    username  = request.session['username']
+    contact_query  = chats.objects.filter(contacts__contains=username).all()
     contacts = []
+    for x in contact_query:
+        for y in x.contacts:
+            if y !=username:
+                contacts.append(y)
 
-    '''
-    do two queries first to chech the reference id and find contacts there.These are the chats the user_id initiated.
-    the sescond query is to check usernames in the contact field which the user has been added
-    '''
-    first_query = chats.objects(reference_id = user_id).values_list('contacts')
-    for query in first_query:
-        contacts.append(query)
+    # next find all the room ids for the contact
+    room_ids = [str(i.pk) for i in contact_query]
 
-    second_query = chats.objects(contacts = request.session['username']).values_list('reference_contact')
-    for query in second_query:
-        contacts.append(query)
-
-
-    username = request.session['username']
+    # next combine the data so that the contact goes with its room_id
+    dataCombined = list(zip(contacts,room_ids))
+    print(dataCombined)
+    
     context = {
         'contact':contacts,
+        'data':dataCombined,
     }
 
-
-    return render(request, 'Users/userChat.html',context)
+    return render(request,'Users/landingChat.html',context)
+    
 
 # view for the chat area
 def chat(request,x):
@@ -248,79 +251,59 @@ def chat(request,x):
     if request.method == 'POST':
         query = request.POST.get('contacts')
         user_id = request.session['user_id']
-        
-        #first check if the userbam eis registered before Check if a chat object already exists for the given user and contacts
+        username  = request.session['username']
+
+        # first check if the query ie th user being checked exists
         check = user_data.objects(user_name = query).values_list('user_name')
+        # next check if the chat object exists ie if there is a contact field that contans both the query and the username
         if check:
-            chat = chats.objects.filter(reference_id=user_id, contacts=query).first() 
-            
-            # If chat object does not exist, create a new one
-            if not chat:
-                chat = chats(reference_id=user_id,reference_contact = request.session['username'],  contacts=query, time_created=datetime.datetime.now())
+            chat = chats.objects.filter(contacts__all=[query, username]).first()
+
+            if chat:
+                return redirect(reverse('Users:chat_room',args=[x])) # this is the url pattern passed as argument
+            else:
+                items=[query,username]
+                chat = chats(reference_id=user_id,reference_contact = username,  contacts=items, time_created=datetime.datetime.now())
                 chat.save()
-            
-            return redirect("Users:chat")
+                return redirect(reverse('Users:chat_room',args=[x]))
         else:
-            return HttpResponse("The User doesnt exist.Please try again.")
+            return HttpResponse('User does not exist')    
         
-    # retrieve all the chats associated with that id 
-    user_id = request.session['user_id']
 
-    # created a contact list
+    # next find all the chat contacts the user is associated in
+    username  = request.session['username']
+    contact_query  = chats.objects.filter(contacts__contains=username).all()
     contacts = []
+    for m in contact_query:
+        for y in m.contacts:
+            if y !=username:
+                contacts.append(y)
 
-    '''
-    do two queries first to chech the reference id and find contacts there.These are the chats the user_id initiated.
-    the sescond query is to check usernames in the contact field which the user has been added
-    '''
-    first_query = chats.objects(reference_id = user_id).values_list('contacts')
-    for query in first_query:
-        contacts.append(query)
+    # next find all the room ids for the contact
+    room_ids = [str(i.pk) for i in contact_query]
 
-    second_query = chats.objects(contacts = request.session['username']).values_list('reference_contact')
-    for query in second_query:
-        contacts.append(query)
-        
-    username = request.session['username']
+    # next combine the data so that the contact goes with its room_id
+    dataCombined = list(zip(contacts,room_ids))
 
-    '''
-    Data for authentication
-    1-username --collected above
-    1-contact --collected above
-    3-room_id
-    '''
-    # room_id = chats.objects.filter(contacts = x ,reference_contact = username)
-    try:
-        room_id = chats.objects(contacts = x).first()
-        if room_id:   #trying to bering the AND in the query
-            room_id  = chats.objects(reference_contact = username).first()
-        print(room_id.pk)
-    except AttributeError:
-        room_id = chats.objects(contacts = username).first()
-        if room_id:
-            room_id  = chats.objects(reference_contact = x).first()
-        print(room_id.pk)
+    # get room id
+    room_id = x
+    
+    # get buddy --the contact you are chatting to durint the view handling 
+    chat_contact = ''
+    chat_query = chats.objects(pk = x).values_list('contacts')
+    for i in chat_query[0]:
+        if i != username:
+            chat_contact = i
 
-    '''Making a correction to pass the room id to the url instead of the one currently in place ie 
-    retrieve all room IDs assocated with the user.Here im applying the logic if you dont find the contact here ie the 
-    contact field first try the reference contact field'''
-    id_rooms = []
-    for id in contacts:
-        try:
-            id_query = chats.objects(contacts = id).first()
-            id_rooms.append(str(id_query.pk))
-        except AttributeError:
-            id_query = chats.objects(reference_contact = id).first()
-            id_rooms.append(str(id_query.pk))
 
-    data_combined = list(zip(contacts,id_rooms))
 
     context = {
         'contact':contacts,
-        'name':x,
+        'name':str(x),
         'username':username,
-        'data':data_combined,
+        'data':dataCombined,
         'room_id':room_id,
+        'buddy':chat_contact,
     }
     return render(request,'Users/userChat.html',context)
 
@@ -344,6 +327,8 @@ def scheduleRooms(request):
     priv_time = []
     namePub = []
     namePriv = []
+    pub_id= []
+    priv_id = []
 
     for id in room_ID:
         room = rooms.objects(pk = id).first()
@@ -353,6 +338,7 @@ def scheduleRooms(request):
             public_data.append(room)
             timetable_public.append(table.table)
             namePub.append(room.name)
+            pub_id.append(str(id))
 
             # for the day data
             if day == 'Monday':
@@ -378,6 +364,7 @@ def scheduleRooms(request):
             private_data.append(room)
             timetable_private.append(table_priv.table)
             namePriv.append(room.name)
+            priv_id.append(str(id))
 
             # for the day data
             if day == 'Monday':
@@ -402,6 +389,11 @@ def scheduleRooms(request):
 
     # Combine todayPriv and timePriv into a list of tuples
     today_priv_combined = list(zip(priv_data, priv_time,namePriv))
+
+    # combine the nameP.. and .._id and taking up the variable name of the former.this dec shuold be at the bottom
+    namePub = list(zip(namePub,pub_id))
+    namePriv = list(zip(namePriv,priv_id))
+
 
      
     context = {
@@ -437,7 +429,11 @@ def profile(request):
 
 # view for the space panel
 def space(request,space):
-    table_data = timetables.objects(room_name = space).first()
+    #get the room name
+    name = rooms.objects(pk = space).first()
+    name  =  name.name
+
+    table_data = timetables.objects(room_name = name).first()
     table= table_data.table
 
     periods = [x for x in table[0]]
@@ -448,15 +444,60 @@ def space(request,space):
     fri = [x for x in table[5]]
     sat = [x for x in table[6]]
 
-    timetable1 = list(zip(periods,monday,tues,wed,thurs,fri,sat))
+    timetable1 = list(zip(periods,monday,tues,wed,thurs,fri,sat)) 
+
+    # list of group members
+    members = rooms.objects(pk = space).values_list('members')
+    members = [x for x in members[0]]
+
+    # send the name of the admin
+    admin = rooms.objects(pk = space).values_list('administrators')
+    admins = [x for x in admin[0]]  #integrate later
 
     context = {
-        'name':space,
+        'name':name,
         'table':table,
         'tableData':table_data,
         'ranges':periods,
         'timetable':timetable1,
+        'room_id':space,
+        'members':members,
+        'username':request.session['username'],
+        'admin':admins,
     }
     return render(request,'Users/space.html',context)
+
+
+# view to join the rooms
+def joinRoom(request):
+
+    username = request.session['username']
+    if request.method == 'POST':
+        room = request.POST.get('Roomname')
+
+        # check if the room exists
+        query = rooms.objects(name = room).first()
+        if query:
+            # fetch the room_id for redirection
+            roomId = query.pk
+            # check if the user is already in the contacts list
+            if username not in query.members:
+                query.members.append(username)
+                query.save()
+
+                # get the user_data to save in the userdata.room field
+                user = user_data.objects(user_name = username).first()
+                user.rooms.append(str(roomId))
+                user.save()
+
+                return redirect(reverse('Users:space',args=[roomId]))
+            else:
+                return HttpResponse('You are already in the Room Space.Navigate to the rooms page to access the room')
+            
+        else:
+            return HttpResponse(f'There is no room called {room} in our database.Please try another Room name')
+
+    return render(request,'Users/joinRoom.html')
+
 
 # Create your views here.
