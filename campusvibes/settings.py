@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'Users',
     'channels',
+    'Admin',
+    'superAdmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
