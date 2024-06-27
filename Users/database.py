@@ -58,7 +58,8 @@ class timetables(Document):
 class resources(Document):
     room_id = ReferenceField(rooms)
     category = StringField()
-    file = FileField()
+    thumbnail = DynamicField()
+    file = DynamicField()
     text = StringField()
     timestamp = DateTimeField()
 

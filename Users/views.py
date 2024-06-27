@@ -11,11 +11,17 @@ from django.contrib.sessions.models import Session
 import datetime
 from django.contrib.sessions.backends.db import SessionStore
 from django.urls import reverse
+from PyPDF2 import PdfFileReader
+from pdf2image import convert_from_bytes
+from io import BytesIO
+import gridfs
+import base64
 
 
-# connecting to the connection string and the db
-# conn = py.MongoClient("mongodb://localhost:27017/")
-# db = conn['Campusvibes_v2']
+# connecting to the connection string and the db for the gridfs
+conn = py.MongoClient("mongodb://localhost:27017/")
+db = conn['Campusvibes_v2']
+fs = gridfs.GridFS(db)
 
 # view handling the registration page
 def Registration(request):
@@ -454,6 +460,59 @@ def space(request,space):
     admin = rooms.objects(pk = space).values_list('administrators')
     admins = [x for x in admin[0]]  #integrate later
 
+    # ----------------------to handle the RESOURCES part-----------------------
+
+    if request.method =='POST':
+        file  = request.FILES.get("media")
+        file_data = file.read()
+        description = request.POST.get("description")
+        timestamp  = datetime.datetime.now()
+        room_ref = space
+        thumbnail_io = None
+
+        if file.name.casefold().endswith(".pdf"):
+            # generate thumbnail
+            name_1 =file.name.split(".")
+            name_1 = name_1[0]
+            
+            images = convert_from_bytes(file_data, poppler_path=r"C:\Users\wekes\OneDrive\Documents\PROJECTS\poppler-24.02.0\Library\bin")
+
+            thumbnail = images[0]
+            # Convert thumbnail to bytes
+            thumbnail_io = BytesIO()
+            thumbnail.save(thumbnail_io, format='PNG')
+            thumbnail_io.seek(0)
+        
+        else:
+            thumbnail = None
+
+
+        # save the resources
+        # for the file
+        file_id = fs.put(file_data,filename = file.name)
+
+        # for the thumbnail
+        if thumbnail_io:
+            thumbnail_id = fs.put(thumbnail_io,filename = name_1)
+        else:
+            thumbnail_id = None
+        
+        resource = resources(room_id = room_ref,timestamp = timestamp,text = description,file = file_id,thumbnail = thumbnail_id)
+        resource.save()
+
+    # retrieve the files and associated data
+    # files_data = fs.find()
+    # get all the object ids of the files associated with the space id
+    thumbnail_ids = resources.objects(room_id = space).values_list('file') #get the thumbnail ids
+    thumbnail_image = []
+    for ids in thumbnail_ids:
+        thumbnail_data = fs.get(ids)
+        byte_stream = BytesIO(thumbnail_data.read())
+        base64_encoded_image = base64.b64encode(byte_stream.getvalue()).decode('utf-8')
+        thumbnail_image.append(base64_encoded_image)
+    
+
+
     context = {
         'name':name,
         'table':table,
@@ -461,9 +520,11 @@ def space(request,space):
         'ranges':periods,
         'timetable':timetable1,
         'room_id':space,
+        'room_id_list':[space],
         'members':members,
         'username':request.session['username'],
         'admin':admins,
+        'thumbnails':thumbnail_image,
     }
     return render(request,'Users/space.html',context)
 

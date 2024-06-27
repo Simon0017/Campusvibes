@@ -6,85 +6,7 @@
     <title>{{name}}'s space</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <style>
-        body {
-            margin: 0;
-            font-family:Arial, Helvetica, sans-serif;
-        }
-
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 5px;
-            width: 17%;
-            background-image: linear-gradient(30deg, #0048bd, #39ADB4);
-            position: fixed;
-            height: 100%;
-            overflow: auto;
-            border-top-right-radius: 10%;
-            transition: width 0.5s; /* Add transition for smooth animation */
-        }
-
-        li a {
-            display: block;
-            color: #000;
-            padding: 8px 16px;
-            text-decoration: none;
-        }
-
-        li a:hover:not(.active) {
-            color: #3f5efb;
-            background: #fff;
-            outline: none;
-            position: relative;
-            background-color: #fff;
-            border-bottom-left-radius: 20px;
-            border-top-left-radius: 20px;
-            text-decoration:none;
-        }
-
-        .menu-icon {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            cursor: pointer;
-            z-index: 999;
-        }
-
-        table{
-            border-radius:7%;
-        }
-
         
-
-        @media screen and (max-width: 600px) {
-            ul {
-                width: 0;
-                opacity: 0;
-                visibility: hidden;
-            }
-
-            .menu-icon {
-                display: block;
-            }
-
-            ul.open {
-                width: 100%;
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .content {
-                margin-left: 0;
-            }
-        }
-
-        /* Style the content area */
-        .content {
-            margin-left: 17%; /* Set initial margin-left */
-            padding: 1px 16px;
-            height: 100%;
-        }
     </style>
     
     <link rel="icon" type="image/jpg" href="{% static 'Users/images/campus-vibes.png' %}">
@@ -94,6 +16,9 @@
     <link href="{% static 'Users/css/frontend.css' %}" rel="stylesheet">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700'>
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <link href="{% static 'Users/css/space.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -118,8 +43,8 @@
 
     <div class="content">
         {% comment %} This div is for the Home button in the  {% endcomment %}
-            <div id ='descrip' style = 'margin:30px 40px;'>
-                <p>Welcome to {{name}} space.This part is collapsible</p>
+            <div id ="descrip" style = 'margin:30px 40px;'>
+                <p>Welcome to {{name}} space.</p>
 
             <table class="table table-striped table-bordered table-hover">
                 <thead>
@@ -151,7 +76,7 @@
         
 
         {% comment %} This div if for the chat button {% endcomment %}
-        <div id = 'chat' class = 'chatting'>
+        <div id = "chat" class = 'chatting'>
             <div class="menu">
                 <a href="#" class="back"><i class="fa fa-angle-left"></i> <img src="https://i.imgur.com/G4EjwqQ.jpg" draggable="false"/></a>
                 <div class="name">{{name}} Group chat</div>
@@ -165,25 +90,50 @@
             <button id = "chatSend" style = 'margin-left:89%;margin-top:15px;padding:7px 15px;'><span><i class="fa fa-send" ></i></span></button>
             </form>
 
-        </div>
-
-        <div id = 'resources' class="flex-container">
-            <div class="flex-item-left">1</div>
-            <div class="flex-item-right">2</div>
-            <div class="flex-item-left">1</div>
-            <div class="flex-item-right">2</div>
-            <div class="flex-item-left">1</div>
-            <div class="flex-item-right">2</div>
-            <div class="flex-item-left">1</div>
-            <div class="flex-item-right">2</div>
-        </div>
-
-        <div id = 'assignment'>
+            </div>
 
         </div>
 
-        <div id = 'settings'>
+        {% comment %} Resources {% endcomment %}
+        <div id = "resources" class="card-s" >
+            {% for thumbnail in thumbnails %}
+            <div class="card card-s-i" style="width: 18rem;">
+              <img src="data:image/png;base64,{{ thumbnail }}" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+            {% endfor %}
+            <div class="card card-s-i" style="width: 18rem;">
+              <img src="https://i.imgur.com/G4EjwqQ.jpg" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+            {% for x in room_id_list %}
+              <form method = "post" action = '{% url "Users:space" x %}' enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-group inputs-group">
+                  <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" placeholder = "choose file " name = "media">
+                  <input type="text" class="form-control" placeholder="Description of the file" aria-label="Server" name = "description">
+                  <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" style= 'font-size:1.3em'>Send</button>
+                </div>
+              </form>
 
+            {% endfor %}
+            
+        </div>
+
+        <div id = "assignment">
+            
+        </div>
+
+        <div id = "settings">
+                
         </div>
         
     </div>

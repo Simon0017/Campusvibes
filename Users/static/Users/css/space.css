@@ -1,0 +1,103 @@
+body {
+    margin: 0;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 1.4em;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 5px;
+    width: 17%;
+    background-image: linear-gradient(30deg, #0048bd, #39ADB4);
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    border-top-right-radius: 10%;
+    transition: width 0.5s; /* Add transition for smooth animation */
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    color: #3f5efb;
+    background: #fff;
+    outline: none;
+    position: relative;
+    background-color: #fff;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    text-decoration:none;
+}
+
+.menu-icon {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 999;
+}
+
+
+/* Style the content area */
+.content {
+    margin-left: 17%; /* Set initial margin-left */
+    padding: 1px 16px;
+    height: 100%;
+}
+
+table{
+    border-radius:7%;
+}
+
+
+
+.card-s{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card-s-i{
+    display: inline-flex;
+}
+
+input[type = "file"] ,input[type = "text"]{
+    font-size: 1.3em;
+}
+
+.inputs-group{
+    position: fixed;
+    bottom: 0px;
+    width: 75%;
+    margin-bottom: 10px;
+
+}
+
+
+@media screen and (max-width: 600px) {
+    ul {
+        width: 0;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .menu-icon {
+        display: block;
+    }
+
+    ul.open {
+        width: 100%;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .content {
+        margin-left: -20px;
+    }
+}
